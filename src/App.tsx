@@ -50,6 +50,8 @@ type Order = {
   orderType: OrderType;
   status: OrderStatus;
   note?: string;
+  /** Delivery address when orderType is "Delivery" */
+  deliveryAddress?: string;
   createdAt: string;
 };
 
@@ -144,7 +146,7 @@ const defaultProducts: Product[] = [
     description: "A classic dozen red roses with eucalyptus and baby's breath.",
     pricePhp: 1899,
     imageUrl:
-      "https://www.knots.ph/images/default-source/Hand-Bouquets-2024/bq24112_1200.jpg?sfvrsn=2",
+      "https://images.pexels.com/photos/1028725/pexels-photo-1028725.jpeg?auto=compress&cs=tinysrgb&w=800",
     categoryId: "romantic",
     isFeatured: true,
   },
@@ -154,7 +156,7 @@ const defaultProducts: Product[] = [
     description: "Sunflowers and gerberas wrapped in kraft paper for a bright surprise.",
     pricePhp: 1499,
     imageUrl:
-      "https://www.knots.ph/images/default-source/Hand-Bouquets-2024/bq20122_charming-smiles-6-sunflower-bouquet_1200.jpg?sfvrsn=2",
+      "https://images.pexels.com/photos/139252/pexels-photo-139252.jpeg?auto=compress&cs=tinysrgb&w=800",
     categoryId: "birthday",
     isFeatured: true,
   },
@@ -164,7 +166,7 @@ const defaultProducts: Product[] = [
     description: "White lilies, mums, and foliage in a soft pastel wrap.",
     pricePhp: 1599,
     imageUrl:
-      "https://blommarose.com/wp-content/uploads/2023/04/IMG_5759.webp",
+      "https://images.pexels.com/photos/21227/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=800",
     categoryId: "sympathy",
   },
   {
@@ -173,7 +175,7 @@ const defaultProducts: Product[] = [
     description: "Curated seasonal blooms in a BlooMery keepsake box.",
     pricePhp: 2299,
     imageUrl:
-      "https://bloomandboxflowers.com/cdn/shop/products/bloom-box-signature-960098.jpg?v=1775759959&width=990",
+      "https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=800",
     categoryId: "custom",
     isFeatured: true,
   },
@@ -187,11 +189,11 @@ const defaultSettings: AppearanceSettings = {
 };
 
 const defaultContact: ContactInfo = {
-  phone: "+63 927 242 3969",
-  email: "ms.raerodrigo@gmail.com",
-  address: "Purok B-2, Canipaan Hinunangan Southern Leyte",
-  facebook: "https://www.facebook.com/share/1LFB3ceUFL/",
-  instagram: "https://www.instagram.com/ew_rie?igsh=b3ZxcjEycjQwanBw",
+  phone: "+63 917 123 4567",
+  email: "hello@bloomery.ph",
+  address: "123 Bloom Lane, Quezon City, Metro Manila",
+  facebook: "facebook.com/BlooMeryPH",
+  instagram: "@bloomery.ph",
 };
 
 // --- Small UI helpers ---
@@ -329,6 +331,7 @@ export default function App() {
     paymentMethod: PaymentMethod;
     orderType: OrderType;
     note?: string;
+    deliveryAddress?: string;
   }) {
     if (!currentUser) return;
     const total = input.items.reduce(
@@ -345,6 +348,7 @@ export default function App() {
       orderType: input.orderType,
       status: "Pending",
       note: input.note,
+      deliveryAddress: input.deliveryAddress,
       createdAt: new Date().toISOString(),
     };
     setOrders((prev) => [order, ...prev]);
@@ -468,7 +472,7 @@ export default function App() {
               </span>
               <span>
                 Prices shown in Philippine Peso ({""}
-                <span className="font-semibold">PHP</span>) for Southern Leyte.
+                <span className="font-semibold">PHP</span>) for Metro Manila.
               </span>
             </div>
           </footer>
@@ -510,7 +514,7 @@ function AuthScreen({ onLogin, onRegisterCustomer, authError }: AuthScreenProps)
             <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-rose-600 text-white">
               BF
             </span>
-            <span>BlooMery Flower Shop · Canipaan, Hinunagan Southern Leyte</span>
+            <span>BlooMery Flower Shop · Quezon City, PH</span>
           </div>
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
             BlooMery Flower Shop
@@ -523,7 +527,7 @@ function AuthScreen({ onLogin, onRegisterCustomer, authError }: AuthScreenProps)
           <dl className="grid grid-cols-2 gap-4 text-xs text-slate-600 sm:grid-cols-3">
             <div className="rounded-2xl bg-rose-50 p-3">
               <dt className="font-semibold text-rose-700">Same-day delivery</dt>
-              <dd>Order before 3 PM within Southern Leyte.</dd>
+              <dd>Order before 3 PM within Metro Manila.</dd>
             </div>
             <div className="rounded-2xl bg-pink-50 p-3">
               <dt className="font-semibold text-pink-700">E-wallet ready</dt>
@@ -757,6 +761,7 @@ type CustomerAreaProps = {
     paymentMethod: PaymentMethod;
     orderType: OrderType;
     note?: string;
+    deliveryAddress?: string;
   }) => void;
   justPlacedOrderId: string | null;
   onClearJustPlacedOrder: () => void;
@@ -781,6 +786,8 @@ function CustomerArea({
   const [showCheckout, setShowCheckout] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("E-Wallet");
   const [orderType, setOrderType] = useState<OrderType>("Delivery");
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [note, setNote] = useState("");
 
   const filteredProducts = useMemo(() => {
@@ -846,10 +853,23 @@ function CustomerArea({
   function handleCheckoutSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!cartItems.length) return;
-    onPlaceOrder({ items: cartItems, paymentMethod, orderType, note });
+    if (orderType === "Delivery" && !deliveryAddress.trim()) {
+      setCheckoutError("Please enter a delivery address for your order.");
+      return;
+    }
+    setCheckoutError(null);
+    onPlaceOrder({
+      items: cartItems,
+      paymentMethod,
+      orderType,
+      note,
+      deliveryAddress:
+        orderType === "Delivery" ? deliveryAddress.trim() : undefined,
+    });
     clearCart();
     setShowCheckout(false);
     setNote("");
+    setDeliveryAddress("");
     setPaymentMethod("E-Wallet");
     setOrderType("Delivery");
     onChangePage("orders");
@@ -1081,35 +1101,40 @@ function CustomerArea({
                     </span>
                   </div>
                   <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
-                    <div className="space-y-1">
-                      <div className="font-semibold text-rose-700">
-                        {formatPhp(order.totalAmountPhp)}
-                      </div>
-                      <div className="flex flex-wrap gap-1 text-[10px] text-slate-500">
-                        <span>{order.paymentMethod}</span>
-                        <span>·</span>
-                        <span>{order.orderType}</span>
-                        {order.note && (
-                          <>
-                            <span>·</span>
-                            <span className="line-clamp-1">Note: {order.note}</span>
-                          </>
+                      <div className="space-y-1">
+                        <div className="font-semibold text-rose-700">
+                          {formatPhp(order.totalAmountPhp)}
+                        </div>
+                        <div className="flex flex-wrap gap-1 text-[10px] text-slate-500">
+                          <span>{order.paymentMethod}</span>
+                          <span>·</span>
+                          <span>{order.orderType}</span>
+                          {order.note && (
+                            <>
+                              <span>·</span>
+                              <span className="line-clamp-1">Note: {order.note}</span>
+                            </>
+                          )}
+                        </div>
+                        {order.orderType === "Delivery" && order.deliveryAddress && (
+                          <p className="text-[10px] text-slate-500">
+                            Deliver to: {order.deliveryAddress}
+                          </p>
                         )}
                       </div>
-                    </div>
-                    <div className="flex flex-wrap gap-1 text-[10px] text-slate-500">
-                      {order.items.map((item) => {
-                        const product = productsById.get(item.productId);
-                        return (
-                          <span
-                            key={item.productId}
-                            className="rounded-full bg-slate-100 px-2 py-0.5"
-                          >
-                            {item.quantity}× {product?.name ?? "Bouquet"}
-                          </span>
-                        );
-                      })}
-                    </div>
+                      <div className="flex flex-wrap gap-1 text-[10px] text-slate-500">
+                        {order.items.map((item) => {
+                          const product = productsById.get(item.productId);
+                          return (
+                            <span
+                              key={item.productId}
+                              className="rounded-full bg-slate-100 px-2 py-0.5"
+                            >
+                              {item.quantity}× {product?.name ?? "Bouquet"}
+                            </span>
+                          );
+                        })}
+                      </div>
                   </div>
                   {justPlacedOrderId === order.id && (
                     <p className="mt-2 rounded-xl bg-emerald-50 px-2 py-1 text-[10px] text-emerald-700">
@@ -1285,7 +1310,10 @@ function CustomerArea({
                   <div className="flex gap-1 rounded-lg bg-slate-100 p-1">
                     <button
                       type="button"
-                      onClick={() => setOrderType("Delivery")}
+                      onClick={() => {
+                        setOrderType("Delivery");
+                        setCheckoutError(null);
+                      }}
                       className={classNames(
                         "flex-1 rounded-md px-2 py-1 text-[11px]",
                         orderType === "Delivery"
@@ -1297,7 +1325,10 @@ function CustomerArea({
                     </button>
                     <button
                       type="button"
-                      onClick={() => setOrderType("Pickup")}
+                      onClick={() => {
+                        setOrderType("Pickup");
+                        setCheckoutError(null);
+                      }}
                       className={classNames(
                         "flex-1 rounded-md px-2 py-1 text-[11px]",
                         orderType === "Pickup"
@@ -1311,6 +1342,21 @@ function CustomerArea({
                 </div>
               </div>
 
+              {orderType === "Delivery" && (
+                <div className="space-y-1">
+                  <label className="text-[11px] font-medium text-slate-700">
+                    Delivery address
+                  </label>
+                  <textarea
+                    rows={2}
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-[11px] shadow-sm focus:border-rose-400 focus:outline-none focus:ring-1 focus:ring-rose-400"
+                    placeholder="House / unit, street, barangay, city (e.g., Quezon City)"
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                  />
+                </div>
+              )}
+
               <div className="space-y-1">
                 <label className="text-[11px] font-medium text-slate-700">
                   Notes for BlooMery (optional)
@@ -1323,6 +1369,10 @@ function CustomerArea({
                   onChange={(e) => setNote(e.target.value)}
                 />
               </div>
+
+              {checkoutError && (
+                <p className="text-[10px] text-rose-600">{checkoutError}</p>
+              )}
 
               <div className="flex items-center justify-between border-t border-dashed border-slate-200 pt-2">
                 <div className="text-[11px] text-slate-500">
@@ -2147,6 +2197,12 @@ function AdminOrdersTab({
                   );
                 })}
               </div>
+
+              {order.orderType === "Delivery" && order.deliveryAddress && (
+                <p className="text-[10px] text-slate-500">
+                  Deliver to: {order.deliveryAddress}
+                </p>
+              )}
 
               {order.note && (
                 <p className="text-[10px] text-slate-500">
