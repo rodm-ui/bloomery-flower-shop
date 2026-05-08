@@ -510,7 +510,7 @@ function AuthScreen({ onLogin, onRegisterCustomer, authError }: AuthScreenProps)
             <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-rose-600 text-white">
               BF
             </span>
-            <span>BlooMery Flower Shop · Quezon City, PH</span>
+            <span>BlooMery Flower Shop · Canipaan, Hinunagan Southern Leyte</span>
           </div>
           <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
             BlooMery Flower Shop
