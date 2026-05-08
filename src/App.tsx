@@ -189,11 +189,11 @@ const defaultSettings: AppearanceSettings = {
 };
 
 const defaultContact: ContactInfo = {
-  phone: "+63 917 123 4567",
-  email: "hello@bloomery.ph",
-  address: "123 Bloom Lane, Quezon City, Metro Manila",
-  facebook: "facebook.com/BlooMeryPH",
-  instagram: "@bloomery.ph",
+  phone: "+63 9272423969",
+  email: "ms.raerodrigo@gmail.com",
+  address: "Purok B-2, Canipaan, Hinunangan Soouthern Leyte",
+  facebook: "https://www.facebook.com/share/1LFB3ceUFL/",
+  instagram: "https://www.instagram.com/ew_rie?igsh=b3ZxcjEycjQwanBw",
 };
 
 // --- Small UI helpers ---
