@@ -173,7 +173,7 @@ const defaultProducts: Product[] = [
     description: "Curated seasonal blooms in a BlooMery keepsake box.",
     pricePhp: 2299,
     imageUrl:
-      "https://www.instagram.com/p/DX6yrBrycB2/",
+      "https://bloomandboxflowers.com/cdn/shop/products/bloom-box-signature-960098.jpg?v=1775759959&width=990",
     categoryId: "custom",
     isFeatured: true,
   },
