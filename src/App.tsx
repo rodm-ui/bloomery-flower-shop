@@ -523,7 +523,7 @@ function AuthScreen({ onLogin, onRegisterCustomer, authError }: AuthScreenProps)
           <dl className="grid grid-cols-2 gap-4 text-xs text-slate-600 sm:grid-cols-3">
             <div className="rounded-2xl bg-rose-50 p-3">
               <dt className="font-semibold text-rose-700">Same-day delivery</dt>
-              <dd>Order before 3 PM within Metro Manila.</dd>
+              <dd>Order before 3 PM within Southern Leyte.</dd>
             </div>
             <div className="rounded-2xl bg-pink-50 p-3">
               <dt className="font-semibold text-pink-700">E-wallet ready</dt>
