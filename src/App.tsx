@@ -144,7 +144,7 @@ const defaultProducts: Product[] = [
     description: "A classic dozen red roses with eucalyptus and baby's breath.",
     pricePhp: 1899,
     imageUrl:
-      "https://images.pexels.com/photos/1028725/pexels-photo-1028725.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://www.knots.ph/images/default-source/Hand-Bouquets-2024/bq24112_1200.jpg?sfvrsn=2",
     categoryId: "romantic",
     isFeatured: true,
   },
@@ -154,7 +154,7 @@ const defaultProducts: Product[] = [
     description: "Sunflowers and gerberas wrapped in kraft paper for a bright surprise.",
     pricePhp: 1499,
     imageUrl:
-      "https://images.pexels.com/photos/139252/pexels-photo-139252.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://www.knots.ph/images/default-source/Hand-Bouquets-2024/bq20122_charming-smiles-6-sunflower-bouquet_1200.jpg?sfvrsn=2",
     categoryId: "birthday",
     isFeatured: true,
   },
@@ -164,7 +164,7 @@ const defaultProducts: Product[] = [
     description: "White lilies, mums, and foliage in a soft pastel wrap.",
     pricePhp: 1599,
     imageUrl:
-      "https://images.pexels.com/photos/21227/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=800",
+      "https://blommarose.com/wp-content/uploads/2023/04/IMG_5759.webp",
     categoryId: "sympathy",
   },
   {
@@ -173,7 +173,7 @@ const defaultProducts: Product[] = [
     description: "Curated seasonal blooms in a BlooMery keepsake box.",
     pricePhp: 2299,
     imageUrl:
-      "https://images.pexels.com/photos/931162/pexels-photo-931162.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "https://www.instagram.com/p/DX6yrBrycB2/",
     categoryId: "custom",
     isFeatured: true,
   },
