@@ -189,7 +189,7 @@ const defaultSettings: AppearanceSettings = {
 const defaultContact: ContactInfo = {
   phone: "+63 927 242 3969",
   email: "ms.raerodrigo@gmail.com",
-  address: "Purok B-2, Canipaan Hinunangan Southern Leyte"
+  address: "Purok B-2, Canipaan Hinunangan Southern Leyte",
   facebook: "https://www.facebook.com/share/1LFB3ceUFL/",
   instagram: "https://www.instagram.com/ew_rie?igsh=b3ZxcjEycjQwanBw",
 };
