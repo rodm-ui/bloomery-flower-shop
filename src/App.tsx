@@ -468,7 +468,7 @@ export default function App() {
               </span>
               <span>
                 Prices shown in Philippine Peso ({""}
-                <span className="font-semibold">PHP</span>) for Metro Manila.
+                <span className="font-semibold">PHP</span>) for Southern Leyte.
               </span>
             </div>
           </footer>
